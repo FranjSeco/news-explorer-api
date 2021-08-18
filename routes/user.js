@@ -7,13 +7,13 @@ const { celebrate, Joi } = require('celebrate');
 
 const { currentUser } = require('../controllers/user');
 
-const method = (value) => {
-  const result = validator.isURL(value);
-  if (result) {
-    return value;
-  }
-  throw new Error('URL validation err');
-};
+// const method = (value) => {
+//   const result = validator.isURL(value);
+//   if (result) {
+//     return value;
+//   }
+//   throw new Error('URL validation err');
+// };
 
 useRouter.get('/me', currentUser);
 

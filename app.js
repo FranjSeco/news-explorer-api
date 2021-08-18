@@ -11,10 +11,10 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 require('dotenv').config();
 
-const userRouter = require('./routes/users');
+const userRouter = require('./routes/user');
 const articleRouter = require('./routes/article');
 
-const { createUser, login } = require('./controllers/users');
+const { createUser, login } = require('./controllers/user');
 
 const { PORT = 3000 } = process.env;
 
