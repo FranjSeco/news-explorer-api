@@ -1,5 +1,5 @@
 const userRouter = require('express').Router();
-const validator = require('validator');
+// const validator = require('validator');
 const { celebrate, Joi } = require('celebrate');
 
 // # returns information about the logged-in user (email and name)
@@ -15,6 +15,6 @@ const { currentUser } = require('../controllers/user');
 //   throw new Error('URL validation err');
 // };
 
-useRouter.get('/me', currentUser);
+userRouter.get('/me', currentUser);
 
 module.exports = userRouter;

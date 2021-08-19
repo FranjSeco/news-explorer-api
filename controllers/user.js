@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const UserModel = require('..models/users')
+const UserModel = require('../models/user')
 
 const NotFoundError = require('../errors/NotFound');
 const NotAuthorized = require('../errors/NotAuthorized');
@@ -21,7 +21,7 @@ UserModel.findById(
 
 const createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10)
-    .then((hash) => UserModel.createUser({
+    .then((hash) => UserModel.create({
       name: req.body.name,
       email: req.body.email,
       password: hash,
@@ -34,7 +34,7 @@ const createUser = (req, res, next) => {
     .catch(next);
 }
 
-// const{ NODE_ENV, JWT_SECRET } = process.env;
+const{ NODE_ENV, JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
 const {email, password} = req.body;
