@@ -1,22 +1,22 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const UserModel = require('../models/user')
+const UserModel = require('../models/user');
 
 const NotFoundError = require('../errors/NotFound');
 const NotAuthorized = require('../errors/NotAuthorized');
 
 const currentUser = (req, res, next) => {
-UserModel.findById(
-  req.UserModel._id
-)
-  .then((user) => {
-    if(!user) {
-      throw new NotFoundError('No user with matching ID found');
-    }
-    const { _doc: [...props ] } = user;
-    res.status(200).send({ data: props });
-  })
-  .catch(next);
+  UserModel.findById(
+    req.UserModel._id,
+  )
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('No user with matching ID found');
+      }
+      const { _doc: [...props] } = user;
+      res.status(200).send({ data: props });
+    })
+    .catch(next);
 };
 
 const createUser = (req, res, next) => {
@@ -32,21 +32,21 @@ const createUser = (req, res, next) => {
       email: user.email,
     }))
     .catch(next);
-}
+};
 
-const{ NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
-const {email, password} = req.body;
-return UserModel.findUserByCredentials(email, password)
-  .then((user) => {
-    if(!user) {
-      throw new NotAuthorized('Not Authorized');
-    }
+  const { email, password } = req.body;
+  return UserModel.findUserByCredentials(email, password)
+    .then((user) => {
+      if (!user) {
+        throw new NotAuthorized('Not Authorized');
+      }
 
-    const token = jwt.sign({ _id: user._id },
-      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-      {expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' });
 
       res.cookie('jwt', token, {
         maxAge: 360000 * 24 * 7,
@@ -54,12 +54,12 @@ return UserModel.findUserByCredentials(email, password)
       });
 
       return res.send({ token });
-  })
-  .catch(next);
+    })
+    .catch(next);
 };
 
 module.exports = {
   currentUser,
   createUser,
-  login
+  login,
 };

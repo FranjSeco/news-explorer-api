@@ -33,7 +33,6 @@ articleRouter.post('/', celebrate({
   }),
 }), createArticle);
 
-
 // # deletes the stored article by _id
 // DELETE /articles/articleId
 
@@ -44,5 +43,4 @@ articleRouter.delete('/:_id',
     }),
   }), deleteArticle);
 
-
-  module.exports = articleRouter;
+module.exports = articleRouter;
