@@ -13,6 +13,10 @@ const articleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  text: {
+    type: String,
+    required: true,
+  },
   source: {
     type: String,
     required: true,
@@ -42,8 +46,7 @@ const articleSchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    select: false,
   },
 });
 
-module.exports = mongoose.model('card', articleSchema);
+module.exports = mongoose.model('article', articleSchema);

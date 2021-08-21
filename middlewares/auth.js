@@ -1,35 +1,20 @@
 const jwt = require('jsonwebtoken');
 const NotAuthorized = require('../errors/NotAuthorized');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { secretKey } = require('../config/utils');
 
 const auth = (req, res, next) => {
-  // getting authorization from the header
-  const { authorization } = req.headers;
-
-  // let's check the header exists and starts with 'Bearer '
-  if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(new NotAuthorized('Not Authorized'));
-    return;
-  }
-  // getting the token
-  const token = authorization.replace('Bearer ', '');
-  // verifying the token
+  const { cookie } = req.headers;
+  const token = cookie.replace('jwt=', '');
   let payload;
-
   try {
-    // trying to verify the token
-    payload = jwt.verify(
-      token,
-      NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
-    );
+    payload = jwt.verify(token, secretKey);
   } catch (err) {
-    // we return an error if something goes wrong
-    next(new NotAuthorized('Not Authorized'));
+    next(new NotAuthorized('Not Authorizeddd'));
   }
-  req.user = payload; // assigning the payload to the request object
 
-  next(); // sending the request to the next middleware
+  req.user = payload;
+  next();
 };
 
 module.exports = auth;

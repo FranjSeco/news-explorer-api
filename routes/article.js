@@ -27,7 +27,7 @@ articleRouter.post('/', celebrate({
     date: Joi.string().required(),
     source: Joi.string().required(),
     title: Joi.string().required(),
-    name: Joi.string().required(),
+    text: Joi.string().required(),
     link: Joi.string().required().custom(method),
     image: Joi.string().required().custom(method),
   }),

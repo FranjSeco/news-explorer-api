@@ -5,4 +5,4 @@ class NotAuthorized extends Error {
   }
 }
 
-module.exports = { NotAuthorized };
+module.exports = NotAuthorized;

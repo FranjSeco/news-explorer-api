@@ -1,20 +1,39 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
+const { secretKey } = require('../config/utils');
 
 const NotFoundError = require('../errors/NotFound');
 const NotAuthorized = require('../errors/NotAuthorized');
 
 const currentUser = (req, res, next) => {
   UserModel.findById(
-    req.UserModel._id,
+    req.user._id,
   )
     .then((user) => {
       if (!user) {
         throw new NotFoundError('No user with matching ID found');
       }
-      const { _doc: [...props] } = user;
-      res.status(200).send({ data: props });
+      res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
+
+const getUser = (req, res, next) => {
+  UserModel.findById(req.params._id)
+    .then((user) => {
+      if (!user) {
+        throw new NotFoundError('No user with matching ID found');
+      }
+      return res.status(200).send({ data: user });
+    })
+    .catch(next);
+};
+
+const getAllUsers = (req, res, next) => {
+  UserModel.find({})
+    .then((users) => {
+      res.status(200).send({ data: users });
     })
     .catch(next);
 };
@@ -26,15 +45,15 @@ const createUser = (req, res, next) => {
       email: req.body.email,
       password: hash,
     }))
-    .then((user) => res.status(200).send({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-    }))
+    .then((user) => {
+      res.status(200).send({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+      });
+    })
     .catch(next);
 };
-
-const { NODE_ENV, JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -45,7 +64,7 @@ const login = (req, res, next) => {
       }
 
       const token = jwt.sign({ _id: user._id },
-        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        secretKey,
         { expiresIn: '7d' });
 
       res.cookie('jwt', token, {
@@ -59,7 +78,10 @@ const login = (req, res, next) => {
 };
 
 module.exports = {
+  getUser,
+  getAllUsers,
   currentUser,
   createUser,
   login,
+
 };

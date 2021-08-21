@@ -17,7 +17,7 @@ const createArticle = (req, res, next) => {
   } = req.body;
 
   ArticleModel.create({
-    keyword, title, text, date, source, link, image,
+    keyword, title, text, date, source, link, image, owner: req.user._id,
   })
     .then((article) => {
       res.status(200).send({ data: article });
@@ -26,17 +26,17 @@ const createArticle = (req, res, next) => {
 };
 
 const deleteArticle = (req, res, next) => {
-  ArticleModel.findByIdAndRemove(req.params._id)
+  ArticleModel.findById(req.params._id)
     .then((article) => {
       if (!article) {
         throw new NotFoundError('This article doesn´t exist');
-      } else if (!article.owner._id === req.user._id) {
-        throw new NotAuthorizedError.NotAuthorized('Not Autorized');
+      } else if (article.owner._id.toString() !== req.user._id) {
+        throw new NotAuthorizedError('Not Authorized');
       } else {
-        res.status(200).send({
-          data: article,
-          message: 'Article deleted',
-        });
+        ArticleModel.findByIdAndDelete(req.params._id)
+          .then(() => {
+            res.status(200).send({ message: 'Article deleted' });
+          });
       }
     })
     .catch(next);
