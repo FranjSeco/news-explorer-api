@@ -21,9 +21,8 @@ router.post('/signin', celebrate({
   }).unknown(true),
 }), login);
 
-router.use(auth);
-router.use('/users', userRouter);
-router.use('/articles', articleRouter);
+router.use('/users', auth, userRouter);
+router.use('/articles', auth, articleRouter);
 
 router.get('*', () => {
   throw new NotFoundError('Requested resource not found');
