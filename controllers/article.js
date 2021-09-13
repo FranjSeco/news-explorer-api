@@ -11,7 +11,7 @@ const getArticles = (req, res, next) => {
     .catch(next);
 };
 
-const createArticle = (req, res, next) => {
+const saveArticle = (req, res, next) => {
   const {
     keyword, title, text, date, source, link, image,
   } = req.body;
@@ -44,6 +44,6 @@ const deleteArticle = (req, res, next) => {
 
 module.exports = {
   getArticles,
-  createArticle,
+  saveArticle,
   deleteArticle,
 };
