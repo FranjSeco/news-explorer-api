@@ -10,7 +10,7 @@ const method = (value) => {
   throw new Error('URL validation err');
 };
 
-const { getArticles, createArticle, deleteArticle } = require('../controllers/article');
+const { getArticles, saveArticle, deleteArticle } = require('../controllers/article');
 
 // # returns all articles saved by the user
 // GET /articles
@@ -31,7 +31,7 @@ articleRouter.post('/', celebrate({
     link: Joi.string().required().custom(method),
     image: Joi.string().required().custom(method),
   }),
-}), createArticle);
+}), saveArticle);
 
 // # deletes the stored article by _id
 // DELETE /articles/articleId

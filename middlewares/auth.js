@@ -4,8 +4,13 @@ const NotAuthorized = require('../errors/NotAuthorized');
 const { secretKey } = require('../config/utils');
 
 const auth = (req, res, next) => {
-  const { cookie } = req.headers;
-  const token = cookie.replace('jwt=', '');
+  console.log(req.headers, 'HERE');
+  const { authorization } = req.headers;
+  if (!authorization || !authorization.startsWith('Bearer ')) {
+    next(new NotAuthorized('Not Authorized'));
+    return;
+  }
+  const token = authorization.replace('Bearer ', '');
   let payload;
   try {
     payload = jwt.verify(token, secretKey);
